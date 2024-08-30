@@ -7,12 +7,16 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
 
-    @Bean
+   /* @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         UserDetails ash= User.builder()
                 .username("Ash2002")
@@ -33,6 +37,25 @@ public class SecurityConfig {
                 .build();
 
         return new InMemoryUserDetailsManager(ash,Theju,john);
+    }*/
+    //Default Schema based on jdbc user detail manager
+   /* @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
+    }*/
+
+    //Custom Schema based on jdbc user detail manager
+    @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource){
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        //Define query to find users by username
+        jdbcUserDetailsManager.setUsersByUsernameQuery("Select user_id,password,enabled from members where user_id=?");
+
+        //Define query to fine roles by username
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("Select user_id,role from roles where user_id=?");
+
+        return jdbcUserDetailsManager;
     }
 
     @Bean

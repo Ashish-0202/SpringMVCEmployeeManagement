@@ -6,4 +6,4 @@ Default schema setup for security:
 
 Custom Schema setup for security:
 
-![img_1.png](img_1.png)
+![img_1.png](img_1.png)     
